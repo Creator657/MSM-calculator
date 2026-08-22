@@ -12,6 +12,30 @@
     <div class="header">
         <div class="brand-dot" aria-hidden="true"></div>
         <h2 id="appTitle">MSM Treat Calc</h2>
+        <div class="theme-select" aria-hidden="false">
+          <label for="themeSelect" class="sr-only">Choose theme</label>
+          <select id="themeSelect" aria-label="Theme selector">
+            <option value="default">Default</option>
+            <option value="plant-island">Plant Island</option>
+            <option value="cold-island">Cold Island</option>
+            <option value="air-island">Air Island</option>
+            <option value="water-island">Water Island</option>
+            <option value="earth-island">Earth Island</option>
+            <option value="fire-haven">Fire Haven</option>
+            <option value="fire-oasis">Fire Oasis</option>
+            <option value="light-island">Light Island</option>
+            <option value="psychic-island">Psychic Island</option>
+            <option value="faerie-island">Faerie Island</option>
+            <option value="bone-island">Bone Island</option>
+            <option value="magical-sanctum">Magical Sanctum</option>
+            <option value="wublin-island">Wublin Island</option>
+            <option value="ethereal-island">Ethereal Island</option>
+            <option value="plasma-islet">Plasma Islet</option>
+            <option value="mech-islet">Mech Islet</option>
+            <option value="shadow-islet">Shadow Islet</option>
+            <option value="crystal-islet">Crystal Islet</option>
+          </select>
+        </div>
     </div>
     
     <div class="input-group">
@@ -43,27 +67,5 @@
 </div>
 
 <script src="script.js"></script>
-<script>
-// Small inline glue to connect the existing controls to the UI expected by the script.
-function updateClicksText(v){
-  const el = document.getElementById('clicksValue');
-  el.textContent = v;
-  const range = document.getElementById('clicksFed');
-  range.setAttribute('aria-valuenow', v);
-}
-
-// Attach calculate handler to button (keeps existing script.js calculate if present)
-document.getElementById('calculateBtn').addEventListener('click', function(){
-  // Prefer an existing global calculateFood() defined in script.js; fall back to triggering it if present.
-  if(typeof calculateFood === 'function') return calculateFood();
-  // Otherwise provide a simple fallback that reads inputs and shows a placeholder result.
-  const x = Number(document.getElementById('foodX').value) || 0;
-  const l = Number(document.getElementById('levelL').value) || 0;
-  const clicks = Number(document.getElementById('clicksFed').value) || 0;
-  // simple example formula (placeholder)
-  const total = Math.round(x * l * 123 + clicks * 50);
-  document.getElementById('resultValue').textContent = total.toLocaleString();
-});
-</script>
 </body>
 </html>

@@ -1,6 +1,29 @@
+// Theme switching + persistence and existing app logic
+(function(){
+  const THEME_KEY = 'msm:theme';
+  const select = document.getElementById('themeSelect');
+
+  function applyTheme(name){
+    if(!name) name = 'default';
+    document.documentElement.setAttribute('data-theme', name);
+    try{ localStorage.setItem(THEME_KEY, name); }catch(e){}
+    if(select) select.value = name;
+  }
+
+  // restore saved theme on load
+  const saved = (function(){try{return localStorage.getItem(THEME_KEY);}catch(e){return null;}})();
+  applyTheme(saved || 'default');
+
+  if(select){
+    select.addEventListener('change', function(e){ applyTheme(e.target.value); });
+  }
+})();
+
 // Updates the text label next to the slider in real-time
 function updateClicksText(val) {
     document.getElementById('clicksValue').innerText = val;
+    const range = document.getElementById('clicksFed');
+    if(range) range.setAttribute('aria-valuenow', String(val));
 }
 
 function calculateFood() {
@@ -8,8 +31,9 @@ function calculateFood() {
     const L = parseInt(document.getElementById('levelL').value);
     const clicksFed = parseInt(document.getElementById('clicksFed').value);
     
+    const resultValue = document.getElementById('resultValue');
     if (isNaN(X) || isNaN(L) || L < 1) {
-        document.getElementById('resultDisplay').innerText = "Please enter valid numbers.";
+        if(resultValue) resultValue.innerText = "Please enter valid numbers.";
         return;
     }
 
@@ -31,6 +55,14 @@ function calculateFood() {
     // Safety fallback in case user target is level 1 and clicks are fed
     if (totalTreats < 0) totalTreats = 0;
 
-    document.getElementById('resultDisplay').innerText = "Total Treats: " + Math.round(totalTreats).toLocaleString();
+    if(resultValue) resultValue.innerText = Math.round(totalTreats).toLocaleString();
 }
 
+// Attach calculate handler to button (keeps existing calculate if redefined elsewhere)
+(function(){
+  const btn = document.getElementById('calculateBtn');
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    if(typeof calculateFood === 'function') return calculateFood();
+  });
+})();
