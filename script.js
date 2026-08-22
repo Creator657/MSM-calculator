@@ -14,11 +14,8 @@
 
   // restore saved theme on load
   const saved = (function(){try{return localStorage.getItem(THEME_KEY);}catch(e){return null;}})();
-  applyTheme(saved || 'default');
-
-  if(select){
-    select.addEventListener('change', function(e){ applyTheme(e.target.value); });
-  }
+  // Delay applying until DOM is ready in case updatePickerDisplay needs elements
+  document.addEventListener('DOMContentLoaded', function(){ applyTheme(saved || 'default'); if(select){ select.addEventListener('change', function(e){ applyTheme(e.target.value); }); } });
 })();
 
 // --- Theme picker UI glue ---
@@ -55,8 +52,8 @@ function updatePickerDisplay(name){
   if(btn && grid) btn.setAttribute('aria-expanded', String(grid.style.display === 'grid'));
 }
 
-// wire up the picker interactions
-(function(){
+// wire up the picker interactions once DOM is ready
+document.addEventListener('DOMContentLoaded', function(){
   const currentBtn = document.getElementById('currentThemeBtn');
   const grid = document.getElementById('themeGrid');
   if(!currentBtn || !grid) return;
@@ -67,6 +64,10 @@ function updatePickerDisplay(name){
     grid.style.display = isOpen ? 'none' : 'grid';
     currentBtn.setAttribute('aria-expanded', String(!isOpen));
     grid.setAttribute('aria-hidden', String(isOpen));
+    if(!isOpen){
+      // focus first item for accessibility
+      const first = grid.querySelector('.theme-item'); if(first) first.focus();
+    }
   });
 
   // click outside to close
@@ -82,13 +83,19 @@ function updatePickerDisplay(name){
       currentBtn.setAttribute('aria-expanded','false');
       e.stopPropagation();
     });
+
+    // keyboard selection
+    item.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); item.click(); }
+    });
   });
 
   // close on escape when grid focussed
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ if(grid){ grid.style.display='none'; grid.setAttribute('aria-hidden','true'); currentBtn.setAttribute('aria-expanded','false'); } } });
-})();
+});
 
 // --- UI glue for sliders and inputs ---
+// Make these functions global so inline oninput attributes continue to work
 function updateClicksText(val) {
     const el = document.getElementById('clicksValue');
     if(el) el.innerText = val;
@@ -98,38 +105,47 @@ function updateClicksText(val) {
 
 function updateCurrentText(val){
     const el = document.getElementById('currentValue');
-    if(el) el.innerText = val;
-    const range = document.getElementById('currentLevel');
-    if(range) range.setAttribute('aria-valuenow', String(val));
-    // ensure target is at least current + 1
-    const target = document.getElementById('targetLevel');
-    if(target){
-      const min = Number(val) + 1;
-      target.min = min;
-      target.setAttribute('aria-valuemin', String(min));
-      if(Number(target.value) <= Number(val)){
-        target.value = min;
-        updateTargetText(target.value);
-      }
+    const currentRange = document.getElementById('currentLevel');
+    const targetRange = document.getElementById('targetLevel');
+    if(!currentRange || !targetRange) return;
+
+    // Clamp value to allowed range
+    let num = Number(val);
+    const maxAllowed = Number(targetRange.value) - 1; // current must be <= target-1
+    if(isNaN(num)) num = Number(currentRange.value);
+    if(num > maxAllowed){
+      // prevent moving target by clamping current
+      num = maxAllowed;
+      currentRange.value = String(num);
     }
+
+    if(el) el.innerText = String(num);
+    currentRange.setAttribute('aria-valuenow', String(num));
+
+    // adjust target's minimum so target >= current+1
+    const minForTarget = Math.max(2, num + 1);
+    targetRange.min = String(minForTarget);
+    targetRange.setAttribute('aria-valuemin', String(minForTarget));
 }
 
 function updateTargetText(val){
     const el = document.getElementById('targetValue');
-    if(el) el.innerText = val;
-    const range = document.getElementById('targetLevel');
-    if(range) range.setAttribute('aria-valuenow', String(val));
-    // ensure target is at least current + 1; if not, nudge current down
-    const current = document.getElementById('currentLevel');
-    if(current){
-      const cur = Number(current.value);
-      const tgt = Number(val);
-      if(tgt <= cur){
-        const newCur = Math.max(1, tgt - 1);
-        current.value = newCur;
-        updateCurrentText(current.value);
-      }
+    const currentRange = document.getElementById('currentLevel');
+    const targetRange = document.getElementById('targetLevel');
+    if(!currentRange || !targetRange) return;
+
+    let num = Number(val);
+    if(isNaN(num)) num = Number(targetRange.value);
+
+    // Ensure target is at least current+1
+    const minAllowed = Math.max(2, Number(currentRange.value) + 1);
+    if(num < minAllowed){
+      num = minAllowed;
+      targetRange.value = String(num);
     }
+
+    if(el) el.innerText = String(num);
+    targetRange.setAttribute('aria-valuenow', String(num));
 }
 
 // Helper: cumulative treats required from level 1 up to level L (same logic as before)
@@ -170,24 +186,22 @@ function calculateFood() {
     if(resultValue) resultValue.innerText = Math.round(totalTreats).toLocaleString();
 }
 
-// Attach calculate handler to button
-(function(){
+// Attach calculate handler to button and attach robust listeners to sliders
+document.addEventListener('DOMContentLoaded', function(){
   const btn = document.getElementById('calculateBtn');
-  if(!btn) return;
-  btn.addEventListener('click', function(){
-    calculateFood();
-  });
-})();
+  if(btn) btn.addEventListener('click', calculateFood);
 
-// Initialize displays on load
-(function(){
   const cur = document.getElementById('currentLevel');
   const tgt = document.getElementById('targetLevel');
   const clicks = document.getElementById('clicksFed');
+
+  if(cur){ cur.addEventListener('input', function(e){ updateCurrentText(e.target.value); }); }
+  if(tgt){ tgt.addEventListener('input', function(e){ updateTargetText(e.target.value); }); }
+  if(clicks){ clicks.addEventListener('input', function(e){ updateClicksText(e.target.value); }); }
+
+  // initialize displays
   if(cur) updateCurrentText(cur.value);
   if(tgt) updateTargetText(tgt.value);
   if(clicks) updateClicksText(clicks.value);
-  // update picker display from saved theme
-  const savedTheme = (function(){try{return localStorage.getItem('msm:theme');}catch(e){return null;}})() || 'default';
-  updatePickerDisplay(savedTheme);
-})();
+
+});
