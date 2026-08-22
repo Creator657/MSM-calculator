@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSM Treat Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="calculator">
+    <h2>MSM Treat Calc</h2>
+    
+    <div class="input-group">
+        <label for="foodX">Food per Click (X):</label>
+        <input type="number" id="foodX" value="22">
+    </div>
+
+    <div class="input-group">
+        <label for="levelL">Target Level (L):</label>
+        <input type="number" id="levelL" value="18" min="1">
+    </div>
+
+    <!-- New Clicks Fed Section -->
+    <div class="input-group">
+        <label for="clicksFed">Clicks Fed Already on Level 1 (0-3):</label>
+        <div class="range-container">
+            <input type="range" id="clicksFed" min="0" max="3" value="0" oninput="updateClicksText(this.value)">
+            <span id="clicksValue">0</span>
+        </div>
+    </div>
+
+    <button onclick="calculateFood()">Calculate Total</button>
+
+    <div class="result" id="resultDisplay">
+        Total Treats: 4,685,736
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
