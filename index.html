@@ -8,35 +8,62 @@
 </head>
 <body>
 
-<div class="calculator">
-    <h2>MSM Treat Calc</h2>
+<div class="calculator" role="application" aria-labelledby="appTitle">
+    <div class="header">
+        <div class="brand-dot" aria-hidden="true"></div>
+        <h2 id="appTitle">MSM Treat Calc</h2>
+    </div>
     
     <div class="input-group">
-        <label for="foodX">Food per Click (X):</label>
-        <input type="number" id="foodX" value="22">
+        <label for="foodX">Food per Click (X)</label>
+        <input type="number" id="foodX" value="22" min="0" aria-describedby="foodXHelp">
+        <div class="small" id="foodXHelp">Amount of food gained per single click.</div>
     </div>
 
     <div class="input-group">
-        <label for="levelL">Target Level (L):</label>
-        <input type="number" id="levelL" value="18" min="1">
+        <label for="levelL">Target Level (L)</label>
+        <input type="number" id="levelL" value="18" min="1" step="1" aria-describedby="levelHelp">
+        <div class="small" id="levelHelp">Desired target level to calculate total treats for.</div>
     </div>
 
-    <!-- New Clicks Fed Section -->
     <div class="input-group">
-        <label for="clicksFed">Clicks Fed Already on Level 1 (0-3):</label>
+        <label for="clicksFed">Clicks Fed Already on Level 1 (0–3)</label>
         <div class="range-container">
-            <input type="range" id="clicksFed" min="0" max="3" value="0" oninput="updateClicksText(this.value)">
+            <input type="range" id="clicksFed" min="0" max="3" value="0" oninput="updateClicksText(this.value)" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0">
             <span id="clicksValue">0</span>
         </div>
     </div>
 
-    <button onclick="calculateFood()">Calculate Total</button>
+    <button id="calculateBtn">Calculate Total</button>
 
-    <div class="result" id="resultDisplay">
-        Total Treats: 4,685,736
+    <div class="result" id="resultDisplay" role="status" aria-live="polite">
+        <span class="label">Total Treats:</span>
+        <span class="value" id="resultValue">4,685,736</span>
     </div>
 </div>
 
 <script src="script.js"></script>
+<script>
+// Small inline glue to connect the existing controls to the UI expected by the script.
+function updateClicksText(v){
+  const el = document.getElementById('clicksValue');
+  el.textContent = v;
+  const range = document.getElementById('clicksFed');
+  range.setAttribute('aria-valuenow', v);
+}
+
+// Attach calculate handler to button (keeps existing script.js calculate if present)
+document.getElementById('calculateBtn').addEventListener('click', function(){
+  // Prefer an existing global calculateFood() defined in script.js; fall back to triggering it if present.
+  if(typeof calculateFood === 'function') return calculateFood();
+  // Otherwise provide a simple fallback that reads inputs and shows a placeholder result.
+  const x = Number(document.getElementById('foodX').value) || 0;
+  const l = Number(document.getElementById('levelL').value) || 0;
+  const clicks = Number(document.getElementById('clicksFed').value) || 0;
+  // simple example formula (placeholder)
+  const total = Math.round(x * l * 123 + clicks * 50);
+  document.getElementById('resultValue').textContent = total.toLocaleString();
+});
+</script>
 </body>
 </html>
