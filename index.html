@@ -44,14 +44,28 @@
         <div class="small" id="foodXHelp">Amount of food gained per single click.</div>
     </div>
 
+    <!-- Current level slider (1-19) -->
     <div class="input-group">
-        <label for="levelL">Target Level (L)</label>
-        <input type="number" id="levelL" value="18" min="1" step="1" aria-describedby="levelHelp">
-        <div class="small" id="levelHelp">Desired target level to calculate total treats for.</div>
+        <label for="currentLevel">Current Level (1–19)</label>
+        <div class="range-container">
+            <input type="range" id="currentLevel" min="1" max="19" value="1" oninput="updateCurrentText(this.value)" aria-valuemin="1" aria-valuemax="19" aria-valuenow="1">
+            <span id="currentValue">1</span>
+        </div>
+        <div class="small">The level the pet is currently at.</div>
+    </div>
+
+    <!-- Target level slider (2-20) -->
+    <div class="input-group">
+        <label for="targetLevel">Target Level (2–20)</label>
+        <div class="range-container">
+            <input type="range" id="targetLevel" min="2" max="20" value="2" oninput="updateTargetText(this.value)" aria-valuemin="2" aria-valuemax="20" aria-valuenow="2">
+            <span id="targetValue">2</span>
+        </div>
+        <div class="small">Desired level (must be at least 1 higher than Current Level).</div>
     </div>
 
     <div class="input-group">
-        <label for="clicksFed">Clicks Fed Already on Level 1 (0–3)</label>
+        <label for="clicksFed">Clicks Fed Already on Current Level (0–3)</label>
         <div class="range-container">
             <input type="range" id="clicksFed" min="0" max="3" value="0" oninput="updateClicksText(this.value)" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0">
             <span id="clicksValue">0</span>
