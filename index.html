@@ -12,9 +12,8 @@
     <div class="header">
         <div class="brand-dot" aria-hidden="true"></div>
         <h2 id="appTitle">MSM Treat Calc</h2>
-        <div class="theme-select" aria-hidden="false">
-          <label for="themeSelect" class="sr-only">Choose theme</label>
-          <select id="themeSelect" aria-label="Theme selector">
+        <div class="theme-picker" aria-hidden="false">
+          <select id="themeSelect" class="sr-only" aria-label="Theme selector (fallback)">
             <option value="default">Default</option>
             <option value="plant-island">Plant Island</option>
             <option value="cold-island">Cold Island</option>
@@ -35,6 +34,91 @@
             <option value="shadow-islet">Shadow Islet</option>
             <option value="crystal-islet">Crystal Islet</option>
           </select>
+
+          <button class="current-theme-btn" id="currentThemeBtn" aria-haspopup="true" aria-expanded="false" aria-label="Choose theme">
+            <span class="current-swatch" id="currentSwatch"></span>
+            <span class="current-theme-label" id="currentLabel">Default</span>
+          </button>
+
+          <div class="theme-grid" id="themeGrid" role="menu" aria-hidden="true">
+            <!-- Each theme-item has data-theme and an inline swatch colors for preview -->
+            <button class="theme-item" data-theme="default" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#0f1724,#122033);"></span>
+              <span class="tname">Default</span>
+            </button>
+            <button class="theme-item" data-theme="plant-island" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#7dd77d,#5aa85a);"></span>
+              <span class="tname">Plant Island</span>
+            </button>
+            <button class="theme-item" data-theme="cold-island" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#8ec6ff,#bfe8ff);"></span>
+              <span class="tname">Cold Island</span>
+            </button>
+            <button class="theme-item" data-theme="air-island" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#bfe7ff,#f1e6d6);"></span>
+              <span class="tname">Air Island</span>
+            </button>
+            <button class="theme-item" data-theme="water-island" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#3dd1c9,#6b8cff);"></span>
+              <span class="tname">Water Island</span>
+            </button>
+            <button class="theme-item" data-theme="earth-island" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#d9903e,#b86a2b);"></span>
+              <span class="tname">Earth Island</span>
+            </button>
+            <button class="theme-item" data-theme="fire-haven" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#ff7043,#ffb86b);"></span>
+              <span class="tname">Fire Haven</span>
+            </button>
+            <button class="theme-item" data-theme="fire-oasis" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#ff7a59,#ffb199);"></span>
+              <span class="tname">Fire Oasis</span>
+            </button>
+            <button class="theme-item" data-theme="light-island" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#ffd27a,#ffc4a3);"></span>
+              <span class="tname">Light Island</span>
+            </button>
+            <button class="theme-item" data-theme="psychic-island" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#d25bd9,#ff78d1);"></span>
+              <span class="tname">Psychic Island</span>
+            </button>
+            <button class="theme-item" data-theme="faerie-island" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#ff77c2,#bcd78f);"></span>
+              <span class="tname">Faerie Island</span>
+            </button>
+            <button class="theme-item" data-theme="bone-island" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#c9b99a,#8b7b6e);"></span>
+              <span class="tname">Bone Island</span>
+            </button>
+            <button class="theme-item" data-theme="magical-sanctum" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#6f4cff,#d6b33b);"></span>
+              <span class="tname">Magical Sanctum</span>
+            </button>
+            <button class="theme-item" data-theme="wublin-island" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#ff2d95,#08f7fe);"></span>
+              <span class="tname">Wublin Island</span>
+            </button>
+            <button class="theme-item" data-theme="ethereal-island" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#b54bff,#00e5ff);"></span>
+              <span class="tname">Ethereal Island</span>
+            </button>
+            <button class="theme-item" data-theme="plasma-islet" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#ff2d9c,#ff6ea6);"></span>
+              <span class="tname">Plasma Islet</span>
+            </button>
+            <button class="theme-item" data-theme="mech-islet" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#f7d547,#9aa3ab);"></span>
+              <span class="tname">Mech Islet</span>
+            </button>
+            <button class="theme-item" data-theme="shadow-islet" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#7b6cff,#6b5a7a);"></span>
+              <span class="tname">Shadow Islet</span>
+            </button>
+            <button class="theme-item" data-theme="crystal-islet" role="menuitem">
+              <span class="swatch" style="background:linear-gradient(90deg,#00d29b,#58e0b0);"></span>
+              <span class="tname">Crystal Islet</span>
+            </button>
+          </div>
         </div>
     </div>
     

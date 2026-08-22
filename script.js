@@ -8,6 +8,8 @@
     document.documentElement.setAttribute('data-theme', name);
     try{ localStorage.setItem(THEME_KEY, name); }catch(e){}
     if(select) select.value = name;
+    // update custom picker display
+    updatePickerDisplay(name);
   }
 
   // restore saved theme on load
@@ -17,6 +19,73 @@
   if(select){
     select.addEventListener('change', function(e){ applyTheme(e.target.value); });
   }
+})();
+
+// --- Theme picker UI glue ---
+const THEME_SWATCHES = {
+  'default': ['#0f1724','#122033'],
+  'plant-island':['#7dd77d','#5aa85a'],
+  'cold-island':['#8ec6ff','#bfe8ff'],
+  'air-island':['#bfe7ff','#f1e6d6'],
+  'water-island':['#3dd1c9','#6b8cff'],
+  'earth-island':['#d9903e','#b86a2b'],
+  'fire-haven':['#ff7043','#ffb86b'],
+  'fire-oasis':['#ff7a59','#ffb199'],
+  'light-island':['#ffd27a','#ffc4a3'],
+  'psychic-island':['#d25bd9','#ff78d1'],
+  'faerie-island':['#ff77c2','#bcd78f'],
+  'bone-island':['#c9b99a','#8b7b6e'],
+  'magical-sanctum':['#6f4cff','#d6b33b'],
+  'wublin-island':['#ff2d95','#08f7fe'],
+  'ethereal-island':['#b54bff','#00e5ff'],
+  'plasma-islet':['#ff2d9c','#ff6ea6'],
+  'mech-islet':['#f7d547','#9aa3ab'],
+  'shadow-islet':['#7b6cff','#6b5a7a'],
+  'crystal-islet':['#00d29b','#58e0b0']
+};
+
+function updatePickerDisplay(name){
+  const btnLabel = document.getElementById('currentLabel');
+  const swatch = document.getElementById('currentSwatch');
+  if(btnLabel) btnLabel.textContent = (name || 'default').split('-').map(w=>w[0].toUpperCase()+w.slice(1)).join(' ');
+  if(swatch && THEME_SWATCHES[name]) swatch.style.background = `linear-gradient(90deg, ${THEME_SWATCHES[name][0]}, ${THEME_SWATCHES[name][1]})`;
+  // update aria-expanded
+  const grid = document.getElementById('themeGrid');
+  const btn = document.getElementById('currentThemeBtn');
+  if(btn && grid) btn.setAttribute('aria-expanded', String(grid.style.display === 'grid'));
+}
+
+// wire up the picker interactions
+(function(){
+  const currentBtn = document.getElementById('currentThemeBtn');
+  const grid = document.getElementById('themeGrid');
+  if(!currentBtn || !grid) return;
+
+  currentBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    const isOpen = grid.style.display === 'grid';
+    grid.style.display = isOpen ? 'none' : 'grid';
+    currentBtn.setAttribute('aria-expanded', String(!isOpen));
+    grid.setAttribute('aria-hidden', String(isOpen));
+  });
+
+  // click outside to close
+  document.addEventListener('click', function(){ if(grid) { grid.style.display = 'none'; grid.setAttribute('aria-hidden','true'); currentBtn.setAttribute('aria-expanded','false'); } });
+
+  // each theme item
+  document.querySelectorAll('.theme-item').forEach(function(item){
+    item.addEventListener('click', function(e){
+      const theme = item.getAttribute('data-theme');
+      applyTheme(theme);
+      grid.style.display = 'none';
+      grid.setAttribute('aria-hidden','true');
+      currentBtn.setAttribute('aria-expanded','false');
+      e.stopPropagation();
+    });
+  });
+
+  // close on escape when grid focussed
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ if(grid){ grid.style.display='none'; grid.setAttribute('aria-hidden','true'); currentBtn.setAttribute('aria-expanded','false'); } } });
 })();
 
 // --- UI glue for sliders and inputs ---
@@ -118,4 +187,7 @@ function calculateFood() {
   if(cur) updateCurrentText(cur.value);
   if(tgt) updateTargetText(tgt.value);
   if(clicks) updateClicksText(clicks.value);
+  // update picker display from saved theme
+  const savedTheme = (function(){try{return localStorage.getItem('msm:theme');}catch(e){return null;}})() || 'default';
+  updatePickerDisplay(savedTheme);
 })();
