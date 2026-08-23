@@ -1,4 +1,4 @@
-// script.js — theme dropdown + reliable slider & calculation logic
+// script.js — theme dropdown + reliable slider & calculation logic + food optimizer
 
 function ready(fn){
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
@@ -107,14 +107,155 @@ function calculateFood(){
   totalTreats = Math.max(0, totalTreats - foodAlreadyFed);
 
   if(resultValue) resultValue.innerText = Math.round(totalTreats).toLocaleString();
+  
+  // Auto-populate optimizer with this value
+  const optimizerInput = document.getElementById('optimizerTreats');
+  if(optimizerInput) {
+    optimizerInput.value = Math.round(totalTreats);
+  }
 }
 
-/* Attach listeners after DOM ready and initialize labels */
+/* FOOD OPTIMIZER */
+
+let foodDatabase = [];
+let optimizer = null;
+
+async function initializeFoodOptimizer() {
+  try {
+    const response = await fetch('data/foods.json');
+    foodDatabase = await response.json();
+    optimizer = new FoodOptimizer(foodDatabase);
+    console.log('✅ Food database loaded!', foodDatabase);
+  } catch (error) {
+    console.error('❌ Error loading food database:', error);
+  }
+}
+
+function formatTime(seconds) {
+  if (seconds < 60) return `${seconds}s`;
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
+  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h`;
+  return `${Math.floor(seconds / 86400)}d`;
+}
+
+function displayRecipe(result) {
+  const container = document.getElementById('recipeContainer');
+  if (!container) return;
+
+  let html = '<div class="recipe-list">';
+  
+  for (let item of result.recipe) {
+    html += `
+      <div class="recipe-item">
+        <div class="recipe-header">
+          <span class="food-name">${item.name}</span>
+          <span class="quantity">×${item.quantity}</span>
+        </div>
+        <div class="recipe-stats">
+          <div class="stat">
+            <span class="stat-label">Treats:</span>
+            <span class="stat-value">${item.treats.toLocaleString()}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Cost:</span>
+            <span class="stat-value">${item.cost.toLocaleString()}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Time:</span>
+            <span class="stat-value">${formatTime(item.time)}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Oven:</span>
+            <span class="stat-value">${item.ovenSize}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function displayComparison(allStrategies) {
+  const container = document.getElementById('comparisonContainer');
+  const resultsDiv = document.getElementById('comparisonResults');
+  
+  if (!resultsDiv) return;
+
+  let html = '<div class="comparison-grid">';
+
+  for (let strategy of ['fastest', 'efficient', 'balanced']) {
+    const result = allStrategies[strategy];
+    if (!result) continue;
+
+    html += `
+      <div class="strategy-card">
+        <h5>${strategy === 'fastest' ? '⚡ Fastest' : strategy === 'efficient' ? '💰 Efficient' : '⚖️ Balanced'}</h5>
+        <div class="strategy-details">
+          <div>Cost: ${result.totalCost.toLocaleString()}</div>
+          <div>Time: ${formatTime(result.totalTime)}</div>
+          <div>Items: ${result.recipe.length}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  html += '</div>';
+  resultsDiv.innerHTML = html;
+  container.style.display = 'block';
+}
+
+function runOptimizer() {
+  if (!optimizer) {
+    alert('❌ Food database not loaded yet. Please refresh the page.');
+    return;
+  }
+
+  const treatsInput = document.getElementById('optimizerTreats');
+  const strategy = document.getElementById('strategySelect').value;
+  const treats = parseInt(treatsInput.value, 10);
+
+  if (isNaN(treats) || treats <= 0) {
+    alert('⚠️ Please enter a valid treat goal!');
+    return;
+  }
+
+  // Get the selected strategy result
+  const result = optimizer.optimize(treats, strategy);
+  
+  // Also get all strategies for comparison
+  const allStrategies = optimizer.getAllStrategies(treats);
+
+  // Display results
+  const resultsDiv = document.getElementById('optimizerResults');
+  const summaryDiv = document.getElementById('optimizerSummary');
+
+  if (summaryDiv) {
+    summaryDiv.innerHTML = `
+      <div class="summary-box">
+        <div class="summary-line">📦 Strategy: <strong>${strategy.toUpperCase()}</strong></div>
+        <div class="summary-line">🎯 Target: <strong>${treats.toLocaleString()}</strong> treats</div>
+        <div class="summary-line">✅ Total: <strong>${result.totalTreats.toLocaleString()}</strong> treats</div>
+        <div class="summary-line">💰 Cost: <strong>${result.totalCost.toLocaleString()}</strong></div>
+        <div class="summary-line">⏱️ Time: <strong>${formatTime(result.totalTime)}</strong></div>
+        <div class="summary-line">📋 Recipe: <strong>${result.recipe.length}</strong> food type(s)</div>
+      </div>
+    `;
+  }
+
+  displayRecipe(result);
+  displayComparison(allStrategies);
+  resultsDiv.style.display = 'block';
+}
+
+/* Attach listeners after DOM ready and initialize */
 ready(function(){
   const cur = document.getElementById('currentLevel');
   const tgt = document.getElementById('targetLevel');
   const clicks = document.getElementById('clicksFed');
   const btn = document.getElementById('calculateBtn');
+  const optimizeBtn = document.getElementById('optimizeBtn');
 
   if(cur){
     cur.addEventListener('input', function(e){ updateCurrentText(e.target.value); });
@@ -132,4 +273,8 @@ ready(function(){
     updateClicksText(clicks.value);
   }
   if(btn) btn.addEventListener('click', calculateFood);
+  if(optimizeBtn) optimizeBtn.addEventListener('click', runOptimizer);
+
+  // Initialize food optimizer
+  initializeFoodOptimizer();
 });
