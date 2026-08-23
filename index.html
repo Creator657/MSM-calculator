@@ -40,49 +40,93 @@
         </div>
 
     </div>
-    
-    <div class="input-group">
-        <label for="foodX">Food per Click (X)</label>
-        <input type="number" id="foodX" value="22" min="0" aria-describedby="foodXHelp">
-        <div class="small" id="foodXHelp">Amount of food gained per single click.</div>
-    </div>
 
-    <!-- Current level slider (1-19) -->
-    <div class="input-group">
-        <label for="currentLevel">Current Level (1–19)</label>
-        <div class="range-container">
-            <input type="range" id="currentLevel" min="1" max="19" value="1" aria-valuemin="1" aria-valuemax="19" aria-valuenow="1">
-            <span id="currentValue">1</span>
+    <!-- CALCULATOR SECTION -->
+    <div class="section">
+        <h3>Level Calculator</h3>
+        
+        <div class="input-group">
+            <label for="foodX">Food per Click (X)</label>
+            <input type="number" id="foodX" value="22" min="0" aria-describedby="foodXHelp">
+            <div class="small" id="foodXHelp">Amount of food gained per single click.</div>
         </div>
-        <div class="small">The level the pet is currently at.</div>
-    </div>
 
-    <!-- Target level slider (2-20) -->
-    <div class="input-group">
-        <label for="targetLevel">Target Level (2–20)</label>
-        <div class="range-container">
-            <input type="range" id="targetLevel" min="2" max="20" value="2" aria-valuemin="2" aria-valuemax="20" aria-valuenow="2">
-            <span id="targetValue">2</span>
+        <!-- Current level slider (1-19) -->
+        <div class="input-group">
+            <label for="currentLevel">Current Level (1–19)</label>
+            <div class="range-container">
+                <input type="range" id="currentLevel" min="1" max="19" value="1" aria-valuemin="1" aria-valuemax="19" aria-valuenow="1">
+                <span id="currentValue">1</span>
+            </div>
+            <div class="small">The level the pet is currently at.</div>
         </div>
-        <div class="small">Desired level (must be at least 1 higher than Current Level).</div>
-    </div>
 
-    <div class="input-group">
-        <label for="clicksFed">Clicks Fed Already on Current Level (0–3)</label>
-        <div class="range-container">
-            <input type="range" id="clicksFed" min="0" max="3" value="0" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0">
-            <span id="clicksValue">0</span>
+        <!-- Target level slider (2-20) -->
+        <div class="input-group">
+            <label for="targetLevel">Target Level (2–20)</label>
+            <div class="range-container">
+                <input type="range" id="targetLevel" min="2" max="20" value="2" aria-valuemin="2" aria-valuemax="20" aria-valuenow="2">
+                <span id="targetValue">2</span>
+            </div>
+            <div class="small">Desired level (must be at least 1 higher than Current Level).</div>
+        </div>
+
+        <div class="input-group">
+            <label for="clicksFed">Clicks Fed Already on Current Level (0–3)</label>
+            <div class="range-container">
+                <input type="range" id="clicksFed" min="0" max="3" value="0" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0">
+                <span id="clicksValue">0</span>
+            </div>
+        </div>
+
+        <button id="calculateBtn">Calculate Total</button>
+
+        <div class="result" id="resultDisplay" role="status" aria-live="polite">
+            <span class="label">Total Treats:</span>
+            <span class="value" id="resultValue">4,685,736</span>
         </div>
     </div>
 
-    <button id="calculateBtn">Calculate Total</button>
+    <!-- FOOD OPTIMIZER SECTION -->
+    <div class="section optimizer-section">
+        <h3>🍳 Food Optimizer</h3>
+        <p class="small">Automatically calculate the best cooking strategy to reach your treat goal!</p>
 
-    <div class="result" id="resultDisplay" role="status" aria-live="polite">
-        <span class="label">Total Treats:</span>
-        <span class="value" id="resultValue">4,685,736</span>
+        <div class="input-group">
+            <label for="optimizerTreats">Treats to Achieve</label>
+            <input type="number" id="optimizerTreats" placeholder="Enter treat goal" aria-describedby="optimizerHelp">
+            <div class="small" id="optimizerHelp">Use the calculator above to find this number!</div>
+        </div>
+
+        <div class="input-group">
+            <label for="strategySelect">Strategy</label>
+            <select id="strategySelect" aria-label="Optimization strategy">
+                <option value="balanced">⚖️ Balanced (Cost + Speed)</option>
+                <option value="efficient">💰 Most Efficient (Best Value)</option>
+                <option value="fastest">⚡ Fastest (Quickest Time)</option>
+            </select>
+        </div>
+
+        <button id="optimizeBtn">Generate Recipe</button>
+
+        <!-- Optimizer Results -->
+        <div id="optimizerResults" style="display:none;">
+            <div class="optimizer-summary" id="optimizerSummary"></div>
+            
+            <h4>📋 Cooking Recipe:</h4>
+            <div class="recipe-container" id="recipeContainer"></div>
+
+            <div class="comparison-container" id="comparisonContainer" style="display:none;">
+                <h4>🔄 Compare All Strategies:</h4>
+                <div id="comparisonResults"></div>
+            </div>
+        </div>
     </div>
+
 </div>
 
+<script src="js/foodDatabase.js"></script>
+<script src="js/foodOptimizer.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
