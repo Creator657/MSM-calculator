@@ -230,6 +230,28 @@ function calculateFood(){
   const totalToTarget = cumulativeToLevel(target, X);
   const totalToCurrent = cumulativeToLevel(current, X);
   let totalTreats = totalToTarget - totalToCurrent;
+
+  // Each level takes exactly 4 feeds, and the cost of a level scales with the
+  // doubling (or 1.5x past level 16) curve — so a feed already done on the
+  // current level is worth a share of THAT level's cost, not a flat X.
+  if(!isNaN(clicksFed) && clicksFed > 0){
+    const nextLevelCost = cumulativeToLevel(current + 1, X) - cumulativeToLevel(current, X);
+    const costPerFeed = nextLevelCost / 4;
+    const foodAlreadyFed = clicksFed * costPerFeed;
+    totalTreats = Math.max(0, totalTreats - foodAlreadyFed);
+  }
+
+  if(resultValue) resultValue.innerText = Math.round(totalTreats).toLocaleString();
+
+  const optimizerInput = document.getElementById('optimizerTreats');
+  if(optimizerInput) {
+    optimizerInput.value = Math.round(totalTreats);
+  }
+}
+
+  const totalToTarget = cumulativeToLevel(target, X);
+  const totalToCurrent = cumulativeToLevel(current, X);
+  let totalTreats = totalToTarget - totalToCurrent;
   const foodAlreadyFed = (isNaN(clicksFed) ? 0 : clicksFed * X);
   totalTreats = Math.max(0, totalTreats - foodAlreadyFed);
 
