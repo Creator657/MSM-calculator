@@ -14,18 +14,17 @@
         <h2 id="appTitle">MSM Treat Calc</h2>
 
         <!-- Visible theme dropdown -->
-       <div class="theme-select" style="margin-left:auto;">
-    <span id="themeLabel" class="small" style="display:block;">Theme</span>
-    <div class="custom-select" id="themeDropdown">
-        <button type="button" id="themeButton" class="theme-btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="themeLabel themeButtonLabel">
-            <span class="theme-swatch" id="themeSwatchCurrent"></span>
-            <span id="themeButtonLabel">Default</span>
-            <span class="chevron" aria-hidden="true">▾</span>
-        </button>
-        <ul class="theme-list" id="themeList" role="listbox" aria-labelledby="themeLabel" hidden></ul>
-    </div>
-</div>
-
+        <div class="theme-select" style="margin-left:auto;">
+            <span id="themeLabel" class="small" style="display:block;">Theme</span>
+            <div class="custom-select" id="themeDropdown">
+                <button type="button" id="themeButton" class="theme-btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="themeLabel themeButtonLabel">
+                    <span class="theme-swatch" id="themeSwatchCurrent"></span>
+                    <span id="themeButtonLabel">Default</span>
+                    <span class="chevron" aria-hidden="true">▾</span>
+                </button>
+                <ul class="theme-list" id="themeList" role="listbox" aria-labelledby="themeLabel" hidden></ul>
+            </div>
+        </div>
     </div>
 
     <!-- CALCULATOR SECTION -->
@@ -112,9 +111,33 @@
 
 </div>
 
+<!-- Hidden Admin / Dev Mode panel — type the secret code anywhere on the page to open it -->
+<div id="adminPanel" class="admin-panel" hidden>
+    <div class="admin-header">
+        <strong>🛠️ Dev Mode</strong>
+        <div class="admin-header-actions">
+            <button type="button" id="adminClear" class="admin-btn">Clear</button>
+            <button type="button" id="adminCopy" class="admin-btn">Copy Log</button>
+            <button type="button" id="adminResetTheme" class="admin-btn">Reset Theme</button>
+            <button type="button" id="adminClose" class="admin-btn admin-close">✕</button>
+        </div>
+    </div>
+
+    <div class="admin-section">
+        <div class="admin-section-title">Live State</div>
+        <pre id="adminState" class="admin-state"></pre>
+    </div>
+
+    <div class="admin-section admin-log-section">
+        <div class="admin-section-title">Console Log</div>
+        <div id="adminLog" class="admin-log" aria-live="polite"></div>
+    </div>
+
+    <textarea id="adminCopyArea" class="sr-only" aria-hidden="true"></textarea>
+</div>
+
 <script src="js/foodDatabase.js"></script>
 <script src="js/foodOptimizer.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
-<!--dummy edit-->
