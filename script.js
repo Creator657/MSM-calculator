@@ -158,7 +158,7 @@ ready(function(){
 
 /* ADMIN / DEV MODE — type the secret code anywhere on the page to toggle */
 ready(function(){
-  const SECRET_CODE = 'devmode'; // <-- change this to whatever code you want
+  const SECRET_CODE = 'devmode!'; // <-- change this to whatever code you want
   let buffer = '';
 
   const panel = document.getElementById('adminPanel');
