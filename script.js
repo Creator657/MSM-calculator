@@ -1,35 +1,15 @@
-// script.js — theme dropdown (custom, with swatch previews) + slider & calculation logic + food optimizer
+// script.js — theme dropdown (loaded from themes.json) + slider & calculation logic + food optimizer
 
 function ready(fn){
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
   else fn();
 }
 
-/* THEME: custom dropdown, color-swatch previews, persistence */
+/* THEME: custom dropdown, loaded from data/themes.json, with swatch previews + persistence */
 ready(function(){
   const THEME_KEY = 'msm:theme';
-
-  const THEMES = [
-    { id: 'default',          label: 'Default',        sw1: '#5eead4', sw2: '#60a5fa' },
-    { id: 'plant-island',     label: 'Plant Island',    sw1: '#7dd77d', sw2: '#5aa85a' },
-    { id: 'cold-island',      label: 'Cold Island',     sw1: '#8ec6ff', sw2: '#bfe8ff' },
-    { id: 'air-island',       label: 'Air Island',      sw1: '#bfe7ff', sw2: '#f1e6d6' },
-    { id: 'water-island',     label: 'Water Island',    sw1: '#3dd1c9', sw2: '#6b8cff' },
-    { id: 'earth-island',     label: 'Earth Island',    sw1: '#d9903e', sw2: '#b86a2b' },
-    { id: 'fire-haven',       label: 'Fire Haven',      sw1: '#ff7043', sw2: '#ffb86b' },
-    { id: 'fire-oasis',       label: 'Fire Oasis',      sw1: '#ff7a59', sw2: '#ffb199' },
-    { id: 'light-island',     label: 'Light Island',    sw1: '#ffd27a', sw2: '#ffc4a3' },
-    { id: 'psychic-island',   label: 'Psychic Island',  sw1: '#d25bd9', sw2: '#ff78d1' },
-    { id: 'faerie-island',    label: 'Faerie Island',   sw1: '#ff77c2', sw2: '#bcd78f' },
-    { id: 'bone-island',      label: 'Bone Island',     sw1: '#c9b99a', sw2: '#8b7b6e' },
-    { id: 'magical-sanctum',  label: 'Magical Sanctum', sw1: '#6f4cff', sw2: '#d6b33b' },
-    { id: 'wublin-island',    label: 'Wublin Island',   sw1: '#ff2d95', sw2: '#08f7fe' },
-    { id: 'ethereal-island',  label: 'Ethereal Island', sw1: '#b54bff', sw2: '#00e5ff' },
-    { id: 'plasma-islet',     label: 'Plasma Islet',    sw1: '#ff2d9c', sw2: '#ff6ea6' },
-    { id: 'mech-islet',       label: 'Mech Islet',      sw1: '#f7d547', sw2: '#9aa3ab' },
-    { id: 'shadow-islet',     label: 'Shadow Islet',    sw1: '#7b6cff', sw2: '#6b5a7a' },
-    { id: 'crystal-islet',    label: 'Crystal Islet',   sw1: '#00d29b', sw2: '#58e0b0' }
-  ];
+  let THEMES = [];
+  let currentId = 'default';
 
   const btn = document.getElementById('themeButton');
   const list = document.getElementById('themeList');
@@ -37,15 +17,27 @@ ready(function(){
   const btnLabel = document.getElementById('themeButtonLabel');
   if(!btn || !list) return;
 
-  let currentId = 'default';
-
   function findTheme(id){
     return THEMES.find(t => t.id === id) || THEMES[0];
   }
 
   function setSwatch(el, theme){
-    el.style.setProperty('--sw1', theme.sw1);
-    el.style.setProperty('--sw2', theme.sw2);
+    el.style.setProperty('--sw1', theme.accent);
+    el.style.setProperty('--sw2', theme.accent2);
+  }
+
+  // Simple relative-luminance check to auto-pick readable button text per theme
+  function relLuminance(hex){
+    const c = hex.replace('#','');
+    if(c.length !== 6) return 0.5;
+    const r = parseInt(c.substring(0,2),16)/255;
+    const g = parseInt(c.substring(2,4),16)/255;
+    const b = parseInt(c.substring(4,6),16)/255;
+    return 0.2126*r + 0.7152*g + 0.0722*b;
+  }
+  function getButtonText(theme){
+    const lum = (relLuminance(theme.accent) + relLuminance(theme.accent2)) / 2;
+    return lum > 0.55 ? '#0b1220' : '#f5f7fa';
   }
 
   function buildList(){
@@ -79,9 +71,20 @@ ready(function(){
 
   function applyTheme(id){
     const theme = findTheme(id);
+    if(!theme) return;
     currentId = theme.id;
-    document.documentElement.setAttribute('data-theme', theme.id);
+
+    const root = document.documentElement;
+    root.setAttribute('data-theme', theme.id);
+    root.style.setProperty('--bg-1', theme.bg1);
+    root.style.setProperty('--bg-2', theme.bg2);
+    root.style.setProperty('--accent', theme.accent);
+    root.style.setProperty('--accent-2', theme.accent2);
+    root.style.setProperty('--muted', theme.muted);
+    root.style.setProperty('--btn-text', getButtonText(theme));
+
     try { localStorage.setItem(THEME_KEY, theme.id); } catch(e) {}
+
     setSwatch(btnSwatch, theme);
     btnLabel.textContent = theme.label;
     list.querySelectorAll('.theme-option').forEach(li => {
@@ -138,10 +141,20 @@ ready(function(){
     }
   });
 
-  buildList();
-
-  const saved = (function(){ try { return localStorage.getItem(THEME_KEY); } catch(e) { return null; } })();
-  applyTheme(saved || 'default');
+  fetch('data/themes.json')
+    .then(res => {
+      if(!res.ok) throw new Error(`Failed to load themes.json: ${res.status}`);
+      return res.json();
+    })
+    .then(data => {
+      THEMES = data;
+      buildList();
+      const saved = (function(){ try { return localStorage.getItem(THEME_KEY); } catch(e) { return null; } })();
+      applyTheme(saved || 'default');
+    })
+    .catch(err => {
+      console.error('❌ Error loading themes:', err);
+    });
 });
 
 /* SLIDERS and CALCULATION */
