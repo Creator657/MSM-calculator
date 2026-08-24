@@ -1,29 +1,147 @@
-// script.js — theme dropdown + reliable slider & calculation logic + food optimizer
+// script.js — theme dropdown (custom, with swatch previews) + slider & calculation logic + food optimizer
 
 function ready(fn){
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
   else fn();
 }
 
-/* THEME: visible dropdown, persistence */
+/* THEME: custom dropdown, color-swatch previews, persistence */
 ready(function(){
   const THEME_KEY = 'msm:theme';
-  const select = document.getElementById('themeSelect');
 
-  function applyTheme(name){
-    if(!name) name = 'default';
-    document.documentElement.setAttribute('data-theme', name);
-    try { localStorage.setItem(THEME_KEY, name); } catch(e) {}
-    if(select) select.value = name;
+  const THEMES = [
+    { id: 'default',          label: 'Default',        sw1: '#5eead4', sw2: '#60a5fa' },
+    { id: 'plant-island',     label: 'Plant Island',    sw1: '#7dd77d', sw2: '#5aa85a' },
+    { id: 'cold-island',      label: 'Cold Island',     sw1: '#8ec6ff', sw2: '#bfe8ff' },
+    { id: 'air-island',       label: 'Air Island',      sw1: '#bfe7ff', sw2: '#f1e6d6' },
+    { id: 'water-island',     label: 'Water Island',    sw1: '#3dd1c9', sw2: '#6b8cff' },
+    { id: 'earth-island',     label: 'Earth Island',    sw1: '#d9903e', sw2: '#b86a2b' },
+    { id: 'fire-haven',       label: 'Fire Haven',      sw1: '#ff7043', sw2: '#ffb86b' },
+    { id: 'fire-oasis',       label: 'Fire Oasis',      sw1: '#ff7a59', sw2: '#ffb199' },
+    { id: 'light-island',     label: 'Light Island',    sw1: '#ffd27a', sw2: '#ffc4a3' },
+    { id: 'psychic-island',   label: 'Psychic Island',  sw1: '#d25bd9', sw2: '#ff78d1' },
+    { id: 'faerie-island',    label: 'Faerie Island',   sw1: '#ff77c2', sw2: '#bcd78f' },
+    { id: 'bone-island',      label: 'Bone Island',     sw1: '#c9b99a', sw2: '#8b7b6e' },
+    { id: 'magical-sanctum',  label: 'Magical Sanctum', sw1: '#6f4cff', sw2: '#d6b33b' },
+    { id: 'wublin-island',    label: 'Wublin Island',   sw1: '#ff2d95', sw2: '#08f7fe' },
+    { id: 'ethereal-island',  label: 'Ethereal Island', sw1: '#b54bff', sw2: '#00e5ff' },
+    { id: 'plasma-islet',     label: 'Plasma Islet',    sw1: '#ff2d9c', sw2: '#ff6ea6' },
+    { id: 'mech-islet',       label: 'Mech Islet',      sw1: '#f7d547', sw2: '#9aa3ab' },
+    { id: 'shadow-islet',     label: 'Shadow Islet',    sw1: '#7b6cff', sw2: '#6b5a7a' },
+    { id: 'crystal-islet',    label: 'Crystal Islet',   sw1: '#00d29b', sw2: '#58e0b0' }
+  ];
+
+  const btn = document.getElementById('themeButton');
+  const list = document.getElementById('themeList');
+  const btnSwatch = document.getElementById('themeSwatchCurrent');
+  const btnLabel = document.getElementById('themeButtonLabel');
+  if(!btn || !list) return;
+
+  let currentId = 'default';
+
+  function findTheme(id){
+    return THEMES.find(t => t.id === id) || THEMES[0];
   }
 
-  // restore saved theme and wire select change
+  function setSwatch(el, theme){
+    el.style.setProperty('--sw1', theme.sw1);
+    el.style.setProperty('--sw2', theme.sw2);
+  }
+
+  function buildList(){
+    list.innerHTML = '';
+    THEMES.forEach(theme => {
+      const li = document.createElement('li');
+      li.className = 'theme-option';
+      li.id = 'themeOpt-' + theme.id;
+      li.setAttribute('role', 'option');
+      li.setAttribute('data-theme-id', theme.id);
+      li.setAttribute('aria-selected', theme.id === currentId ? 'true' : 'false');
+      li.tabIndex = -1;
+
+      const sw = document.createElement('span');
+      sw.className = 'theme-swatch';
+      setSwatch(sw, theme);
+
+      const label = document.createElement('span');
+      label.textContent = theme.label;
+
+      li.appendChild(sw);
+      li.appendChild(label);
+      li.addEventListener('click', () => {
+        applyTheme(theme.id);
+        closeList();
+        btn.focus();
+      });
+      list.appendChild(li);
+    });
+  }
+
+  function applyTheme(id){
+    const theme = findTheme(id);
+    currentId = theme.id;
+    document.documentElement.setAttribute('data-theme', theme.id);
+    try { localStorage.setItem(THEME_KEY, theme.id); } catch(e) {}
+    setSwatch(btnSwatch, theme);
+    btnLabel.textContent = theme.label;
+    list.querySelectorAll('.theme-option').forEach(li => {
+      const isActive = li.getAttribute('data-theme-id') === theme.id;
+      li.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      li.classList.toggle('is-active', isActive);
+    });
+  }
+
+  function openList(){
+    list.hidden = false;
+    btn.setAttribute('aria-expanded', 'true');
+    const active = list.querySelector('.theme-option[aria-selected="true"]') || list.querySelector('.theme-option');
+    if(active) active.focus();
+  }
+  function closeList(){
+    list.hidden = true;
+    btn.setAttribute('aria-expanded', 'false');
+  }
+  function toggleList(){
+    if(list.hidden) openList(); else closeList();
+  }
+
+  btn.addEventListener('click', toggleList);
+
+  list.addEventListener('keydown', (e) => {
+    const options = Array.from(list.querySelectorAll('.theme-option'));
+    const idx = options.indexOf(document.activeElement);
+    if(e.key === 'ArrowDown'){
+      e.preventDefault();
+      const next = options[Math.min(options.length - 1, idx + 1)];
+      if(next) next.focus();
+    } else if(e.key === 'ArrowUp'){
+      e.preventDefault();
+      const prev = options[Math.max(0, idx - 1)];
+      if(prev) prev.focus();
+    } else if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      const el = document.activeElement;
+      if(el && el.classList.contains('theme-option')){
+        applyTheme(el.getAttribute('data-theme-id'));
+        closeList();
+        btn.focus();
+      }
+    } else if(e.key === 'Escape'){
+      closeList();
+      btn.focus();
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if(!list.hidden && !list.contains(e.target) && e.target !== btn){
+      closeList();
+    }
+  });
+
+  buildList();
+
   const saved = (function(){ try { return localStorage.getItem(THEME_KEY); } catch(e) { return null; } })();
   applyTheme(saved || 'default');
-
-  if(select){
-    select.addEventListener('change', function(e){ applyTheme(e.target.value); });
-  }
 });
 
 /* SLIDERS and CALCULATION */
@@ -43,9 +161,8 @@ function updateCurrentText(raw){
 
   let n = Number(raw);
   if(isNaN(n)) n = Number(cur.value) || 1;
-  n = Math.max(1, Math.min(19, n)); // clamp to 1..19
+  n = Math.max(1, Math.min(19, n));
 
-  // allow current up to (target - 1) but DO NOT move target
   const targetVal = Number(tgt.value) || 2;
   const maxAllowed = Math.max(1, Math.min(19, targetVal - 1));
   if(n > maxAllowed) n = maxAllowed;
@@ -54,7 +171,6 @@ function updateCurrentText(raw){
   setTextIf('currentValue', n);
   setAriaIf('currentLevel', 'aria-valuenow', n);
 
-  // update target.min for accessibility (do not change target.value)
   const minForTarget = Math.max(2, n + 1);
   tgt.min = String(minForTarget);
   tgt.setAttribute('aria-valuemin', String(minForTarget));
@@ -67,9 +183,8 @@ function updateTargetText(raw){
 
   let n = Number(raw);
   if(isNaN(n)) n = Number(tgt.value) || 2;
-  n = Math.max(2, Math.min(20, n)); // clamp 2..20
+  n = Math.max(2, Math.min(20, n));
 
-  // ensure target >= current + 1; clamp target (do not move current)
   const curVal = Number(cur.value) || 1;
   const minAllowed = Math.max(2, curVal + 1);
   if(n < minAllowed) n = minAllowed;
@@ -79,7 +194,6 @@ function updateTargetText(raw){
   setAriaIf('targetLevel', 'aria-valuenow', n);
 }
 
-// cumulative formula unchanged
 function cumulativeToLevel(L, X){
   if(L <= 1) return 0;
   if(L <= 16) return 4 * X * (Math.pow(2, L - 1) - 1);
@@ -107,8 +221,7 @@ function calculateFood(){
   totalTreats = Math.max(0, totalTreats - foodAlreadyFed);
 
   if(resultValue) resultValue.innerText = Math.round(totalTreats).toLocaleString();
-  
-  // Auto-populate optimizer with this value
+
   const optimizerInput = document.getElementById('optimizerTreats');
   if(optimizerInput) {
     optimizerInput.value = Math.round(totalTreats);
@@ -143,7 +256,7 @@ function displayRecipe(result) {
   if (!container) return;
 
   let html = '<div class="recipe-list">';
-  
+
   for (let item of result.recipe) {
     html += `
       <div class="recipe-item">
@@ -172,7 +285,7 @@ function displayRecipe(result) {
       </div>
     `;
   }
-  
+
   html += '</div>';
   container.innerHTML = html;
 }
@@ -180,7 +293,7 @@ function displayRecipe(result) {
 function displayComparison(allStrategies) {
   const container = document.getElementById('comparisonContainer');
   const resultsDiv = document.getElementById('comparisonResults');
-  
+
   if (!resultsDiv) return;
 
   let html = '<div class="comparison-grid">';
@@ -221,13 +334,9 @@ function runOptimizer() {
     return;
   }
 
-  // Get the selected strategy result
   const result = optimizer.optimize(treats, strategy);
-  
-  // Also get all strategies for comparison
   const allStrategies = optimizer.getAllStrategies(treats);
 
-  // Display results
   const resultsDiv = document.getElementById('optimizerResults');
   const summaryDiv = document.getElementById('optimizerSummary');
 
@@ -275,6 +384,5 @@ ready(function(){
   if(btn) btn.addEventListener('click', calculateFood);
   if(optimizeBtn) optimizeBtn.addEventListener('click', runOptimizer);
 
-  // Initialize food optimizer
   initializeFoodOptimizer();
 });
