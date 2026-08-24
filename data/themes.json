@@ -1,0 +1,21 @@
+[
+  { "id": "default",         "label": "Default",         "bg1": "#0f1724", "bg2": "#122033", "accent": "#5eead4", "accent2": "#60a5fa", "muted": "rgba(236,240,241,0.95)" },
+  { "id": "plant-island",    "label": "Plant Island",    "bg1": "#0b2e16", "bg2": "#123d24", "accent": "#7dd77d", "accent2": "#5aa85a", "muted": "#e9f6ec" },
+  { "id": "cold-island",     "label": "Cold Island",     "bg1": "#eaf6fb", "bg2": "#cfeaf8", "accent": "#8ec6ff", "accent2": "#bfe8ff", "muted": "#07293b" },
+  { "id": "air-island",      "label": "Air Island",      "bg1": "#f7f6f2", "bg2": "#eef6fb", "accent": "#bfe7ff", "accent2": "#f1e6d6", "muted": "#24333a" },
+  { "id": "water-island",    "label": "Water Island",    "bg1": "#021824", "bg2": "#062a38", "accent": "#3dd1c9", "accent2": "#6b8cff", "muted": "#dff8f5" },
+  { "id": "earth-island",    "label": "Earth Island",    "bg1": "#2b1b10", "bg2": "#3d2a18", "accent": "#d9903e", "accent2": "#b86a2b", "muted": "#fff6ec" },
+  { "id": "fire-haven",      "label": "Fire Haven",      "bg1": "#2a0b05", "bg2": "#3a1206", "accent": "#ff7043", "accent2": "#ffb86b", "muted": "#fff0e8" },
+  { "id": "fire-oasis",      "label": "Fire Oasis",      "bg1": "#ffedd7", "bg2": "#ffd7b3", "accent": "#ff7a59", "accent2": "#ffb199", "muted": "#3b1f11" },
+  { "id": "light-island",    "label": "Light Island",    "bg1": "#fff7e6", "bg2": "#fff1cc", "accent": "#ffd27a", "accent2": "#ffc4a3", "muted": "#223033" },
+  { "id": "psychic-island",  "label": "Psychic Island",  "bg1": "#0b0712", "bg2": "#1a1021", "accent": "#d25bd9", "accent2": "#ff78d1", "muted": "#f6eefe" },
+  { "id": "faerie-island",   "label": "Faerie Island",   "bg1": "#fff6fb", "bg2": "#f6f2ff", "accent": "#ff77c2", "accent2": "#bcd78f", "muted": "#1f2730" },
+  { "id": "bone-island",     "label": "Bone Island",     "bg1": "#f7f4ed", "bg2": "#efe9db", "accent": "#c9b99a", "accent2": "#8b7b6e", "muted": "#1f2327" },
+  { "id": "magical-sanctum", "label": "Magical Sanctum", "bg1": "#07031a", "bg2": "#0f0530", "accent": "#6f4cff", "accent2": "#d6b33b", "muted": "#efe9ff" },
+  { "id": "wublin-island",   "label": "Wublin Island",   "bg1": "#0f0f11", "bg2": "#151518", "accent": "#ff2d95", "accent2": "#08f7fe", "muted": "#f5f5f5" },
+  { "id": "ethereal-island", "label": "Ethereal Island", "bg1": "#0b0022", "bg2": "#1a0038", "accent": "#b54bff", "accent2": "#00e5ff", "muted": "#f7f0ff" },
+  { "id": "plasma-islet",    "label": "Plasma Islet",    "bg1": "#1a001a", "bg2": "#2b002b", "accent": "#ff2d9c", "accent2": "#ff6ea6", "muted": "#fff3fb" },
+  { "id": "mech-islet",      "label": "Mech Islet",      "bg1": "#0f1214", "bg2": "#1a1d20", "accent": "#f7d547", "accent2": "#9aa3ab", "muted": "#e6e9ea" },
+  { "id": "shadow-islet",    "label": "Shadow Islet",    "bg1": "#000000", "bg2": "#0b0b0f", "accent": "#7b6cff", "accent2": "#6b5a7a", "muted": "#9aa3b2" },
+  { "id": "crystal-islet",   "label": "Crystal Islet",   "bg1": "#e7fff6", "bg2": "#d6fff2", "accent": "#00d29b", "accent2": "#58e0b0", "muted": "#05302b" }
+]
