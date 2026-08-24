@@ -1,0 +1,12 @@
+[
+  { "name": "Cupcakes", "cost": 50, "timeSeconds": 30, "treatsGiven": 5, "minOvenSize": "small" },
+  { "name": "Cookies", "cost": 250, "timeSeconds": 300, "treatsGiven": 25, "minOvenSize": "small" },
+  { "name": "Bread", "cost": 1000, "timeSeconds": 1800, "treatsGiven": 100, "minOvenSize": "small" },
+  { "name": "Donuts", "cost": 5000, "timeSeconds": 3600, "treatsGiven": 500, "minOvenSize": "medium" },
+  { "name": "Ice Cream", "cost": 15000, "timeSeconds": 10800, "treatsGiven": 1500, "minOvenSize": "medium" },
+  { "name": "Pizza", "cost": 75000, "timeSeconds": 21600, "treatsGiven": 7500, "minOvenSize": "medium" },
+  { "name": "Pie", "cost": 500000, "timeSeconds": 43200, "treatsGiven": 50000, "minOvenSize": "large" },
+  { "name": "Turkey", "cost": 1000000, "timeSeconds": 86400, "treatsGiven": 100000, "minOvenSize": "large" },
+  { "name": "Cake", "cost": 5000000, "timeSeconds": 172800, "treatsGiven": 500000, "minOvenSize": "large" },
+  { "name": "Big Salad", "cost": 10000000, "timeSeconds": 172800, "treatsGiven": 1000000, "minOvenSize": "large" }
+]
