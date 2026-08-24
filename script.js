@@ -1,4 +1,4 @@
-// script.js — theme dropdown (loaded from themes.json) + slider & calculation logic + food optimizer
+// script.js — theme dropdown + slider & calculation logic + food optimizer + admin dev panel
 
 function ready(fn){
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
@@ -26,7 +26,6 @@ ready(function(){
     el.style.setProperty('--sw2', theme.accent2);
   }
 
-  // Simple relative-luminance check to auto-pick readable button text per theme
   function relLuminance(hex){
     const c = hex.replace('#','');
     if(c.length !== 6) return 0.5;
@@ -153,8 +152,133 @@ ready(function(){
       applyTheme(saved || 'default');
     })
     .catch(err => {
-      console.error('❌ Error loading themes:', err);
+      console.error('Error loading themes:', err);
     });
+});
+
+/* ADMIN / DEV MODE — type the secret code anywhere on the page to toggle */
+ready(function(){
+  const SECRET_CODE = 'devmode'; // <-- change this to whatever code you want
+  let buffer = '';
+
+  const panel = document.getElementById('adminPanel');
+  const logEl = document.getElementById('adminLog');
+  const stateEl = document.getElementById('adminState');
+  const closeBtn = document.getElementById('adminClose');
+  const clearBtn = document.getElementById('adminClear');
+  const copyBtn = document.getElementById('adminCopy');
+  const resetThemeBtn = document.getElementById('adminResetTheme');
+  const copyArea = document.getElementById('adminCopyArea');
+  if(!panel || !logEl) return;
+
+  const MAX_LOG_ENTRIES = 200;
+  let entries = [];
+
+  function escapeHtml(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function addLogEntry(level, args){
+    const text = args.map(a => {
+      if(a instanceof Error) return a.stack || a.message;
+      if(typeof a === 'object' && a !== null){
+        try { return JSON.stringify(a); } catch(e){ return String(a); }
+      }
+      return String(a);
+    }).join(' ');
+
+    const time = new Date().toLocaleTimeString();
+    entries.push({ level, text, time });
+    if(entries.length > MAX_LOG_ENTRIES) entries.shift();
+    renderLog();
+  }
+
+  function renderLog(){
+    logEl.innerHTML = entries.map(e =>
+      `<div class="admin-log-entry log-${e.level}">[${e.time}] ${e.level.toUpperCase()}: ${escapeHtml(e.text)}</div>`
+    ).join('');
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  // Wrap console methods so anything the app already logs shows up here too
+  ['log','warn','error','info'].forEach(level => {
+    const original = console[level].bind(console);
+    console[level] = function(...args){
+      original(...args);
+      addLogEntry(level === 'log' ? 'info' : level, args);
+    };
+  });
+
+  // Auto-catch runtime errors and unhandled promise rejections — this is the big win
+  // since you can't open real DevTools on the Chromebook to see these otherwise.
+  window.addEventListener('error', (e) => {
+    addLogEntry('error', [`${e.message} (${e.filename}:${e.lineno}:${e.colno})`]);
+  });
+  window.addEventListener('unhandledrejection', (e) => {
+    addLogEntry('error', ['Unhandled promise rejection:', e.reason]);
+  });
+
+  function updateState(){
+    const getVal = id => { const el = document.getElementById(id); return el ? el.value : undefined; };
+    const state = {
+      theme: document.documentElement.getAttribute('data-theme'),
+      foodX: getVal('foodX'),
+      currentLevel: getVal('currentLevel'),
+      targetLevel: getVal('targetLevel'),
+      clicksFed: getVal('clicksFed'),
+      optimizerTreats: getVal('optimizerTreats'),
+      strategy: getVal('strategySelect'),
+      foodDatabaseLoaded: typeof foodDatabase !== 'undefined' ? foodDatabase.length : 'n/a',
+      optimizerReady: typeof optimizer !== 'undefined' ? !!optimizer : 'n/a'
+    };
+    stateEl.textContent = JSON.stringify(state, null, 2);
+  }
+
+  function openPanel(){
+    panel.hidden = false;
+    updateState();
+    addLogEntry('info', ['Dev mode opened']);
+  }
+  function closePanel(){
+    panel.hidden = true;
+  }
+  function togglePanel(){
+    if(panel.hidden) openPanel(); else closePanel();
+  }
+
+  // Secret code — types anywhere on the page in the background, never blocks normal typing
+  document.addEventListener('keydown', (e) => {
+    if(e.key.length === 1){
+      buffer = (buffer + e.key.toLowerCase()).slice(-SECRET_CODE.length);
+      if(buffer === SECRET_CODE){
+        togglePanel();
+        buffer = '';
+      }
+    }
+  });
+
+  closeBtn.addEventListener('click', closePanel);
+  clearBtn.addEventListener('click', () => { entries = []; renderLog(); });
+  resetThemeBtn.addEventListener('click', () => {
+    try { localStorage.removeItem('msm:theme'); } catch(err){}
+    location.reload();
+  });
+  copyBtn.addEventListener('click', () => {
+    const text = entries.map(e => `[${e.time}] ${e.level.toUpperCase()}: ${e.text}`).join('\n');
+    copyArea.value = text;
+    copyArea.classList.remove('sr-only');
+    copyArea.select();
+    try {
+      document.execCommand('copy');
+      addLogEntry('info', ['Log copied to clipboard']);
+    } catch(err){
+      addLogEntry('warn', ['Copy failed — text is selected above, copy manually']);
+    }
+    copyArea.classList.add('sr-only');
+  });
+
+  // Keep the state dump live while the panel is open
+  setInterval(() => { if(!panel.hidden) updateState(); }, 1000);
 });
 
 /* SLIDERS and CALCULATION */
@@ -231,9 +355,6 @@ function calculateFood(){
   const totalToCurrent = cumulativeToLevel(current, X);
   let totalTreats = totalToTarget - totalToCurrent;
 
-  // Each level takes exactly 4 feeds, and the cost of a level scales with the
-  // doubling (or 1.5x past level 16) curve — so a feed already done on the
-  // current level is worth a share of THAT level's cost, not a flat X.
   if(!isNaN(clicksFed) && clicksFed > 0){
     const nextLevelCost = cumulativeToLevel(current + 1, X) - cumulativeToLevel(current, X);
     const costPerFeed = nextLevelCost / 4;
@@ -249,19 +370,6 @@ function calculateFood(){
   }
 }
 
-  const totalToTarget = cumulativeToLevel(target, X);
-  const totalToCurrent = cumulativeToLevel(current, X);
-  let totalTreats = totalToTarget - totalToCurrent;
-  const foodAlreadyFed = (isNaN(clicksFed) ? 0 : clicksFed * X);
-  totalTreats = Math.max(0, totalTreats - foodAlreadyFed);
-
-  if(resultValue) resultValue.innerText = Math.round(totalTreats).toLocaleString();
-
-  const optimizerInput = document.getElementById('optimizerTreats');
-  if(optimizerInput) {
-    optimizerInput.value = Math.round(totalTreats);
-  }
-
 /* FOOD OPTIMIZER */
 
 let foodDatabase = [];
@@ -272,9 +380,9 @@ async function initializeFoodOptimizer() {
     const response = await fetch('data/foods.json');
     foodDatabase = await response.json();
     optimizer = new FoodOptimizer(foodDatabase);
-    console.log('✅ Food database loaded!', foodDatabase);
+    console.log('Food database loaded!', foodDatabase);
   } catch (error) {
-    console.error('❌ Error loading food database:', error);
+    console.error('Error loading food database:', error);
   }
 }
 
@@ -355,7 +463,7 @@ function displayComparison(allStrategies) {
 
 function runOptimizer() {
   if (!optimizer) {
-    alert('❌ Food database not loaded yet. Please refresh the page.');
+    alert('Food database not loaded yet. Please refresh the page.');
     return;
   }
 
@@ -364,7 +472,7 @@ function runOptimizer() {
   const treats = parseInt(treatsInput.value, 10);
 
   if (isNaN(treats) || treats <= 0) {
-    alert('⚠️ Please enter a valid treat goal!');
+    alert('Please enter a valid treat goal!');
     return;
   }
 
