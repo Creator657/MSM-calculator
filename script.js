@@ -261,7 +261,6 @@ function calculateFood(){
   if(optimizerInput) {
     optimizerInput.value = Math.round(totalTreats);
   }
-}
 
 /* FOOD OPTIMIZER */
 
