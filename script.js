@@ -200,7 +200,6 @@ ready(function(){
     logEl.scrollTop = logEl.scrollHeight;
   }
 
-  // Wrap console methods so anything the app already logs shows up here too
   ['log','warn','error','info'].forEach(level => {
     const original = console[level].bind(console);
     console[level] = function(...args){
@@ -209,8 +208,6 @@ ready(function(){
     };
   });
 
-  // Auto-catch runtime errors and unhandled promise rejections — this is the big win
-  // since you can't open real DevTools on the Chromebook to see these otherwise.
   window.addEventListener('error', (e) => {
     addLogEntry('error', [`${e.message} (${e.filename}:${e.lineno}:${e.colno})`]);
   });
@@ -228,6 +225,7 @@ ready(function(){
       clicksFed: getVal('clicksFed'),
       optimizerTreats: getVal('optimizerTreats'),
       strategy: getVal('strategySelect'),
+      ovens: { small: getVal('ovenSmall'), medium: getVal('ovenMedium'), large: getVal('ovenLarge') },
       foodDatabaseLoaded: typeof foodDatabase !== 'undefined' ? foodDatabase.length : 'n/a',
       optimizerReady: typeof optimizer !== 'undefined' ? !!optimizer : 'n/a'
     };
@@ -246,7 +244,6 @@ ready(function(){
     if(panel.hidden) openPanel(); else closePanel();
   }
 
-  // Secret code — types anywhere on the page in the background, never blocks normal typing
   document.addEventListener('keydown', (e) => {
     if(e.key.length === 1){
       buffer = (buffer + e.key.toLowerCase()).slice(-SECRET_CODE.length);
@@ -277,7 +274,6 @@ ready(function(){
     copyArea.classList.add('sr-only');
   });
 
-  // Keep the state dump live while the panel is open
   setInterval(() => { if(!panel.hidden) updateState(); }, 1000);
 });
 
@@ -449,7 +445,7 @@ function displayComparison(allStrategies) {
         <h5>${strategy === 'fastest' ? '⚡ Fastest' : strategy === 'efficient' ? '💰 Efficient' : '⚖️ Balanced'}</h5>
         <div class="strategy-details">
           <div>Cost: ${result.totalCost.toLocaleString()}</div>
-          <div>Time: ${formatTime(result.totalTime)}</div>
+          <div>Real time: ${result.scheduleWarning ? '—' : formatTime(result.estimatedRealTime)}</div>
           <div>Items: ${result.recipe.length}</div>
         </div>
       </div>
@@ -476,20 +472,31 @@ function runOptimizer() {
     return;
   }
 
-  const result = optimizer.optimize(treats, strategy);
-  const allStrategies = optimizer.getAllStrategies(treats);
+  const ovens = {
+    small: Math.max(0, parseInt(document.getElementById('ovenSmall').value, 10) || 0),
+    medium: Math.max(0, parseInt(document.getElementById('ovenMedium').value, 10) || 0),
+    large: Math.max(0, parseInt(document.getElementById('ovenLarge').value, 10) || 0)
+  };
+
+  const result = optimizer.optimize(treats, strategy, ovens);
+  const allStrategies = optimizer.getAllStrategies(treats, ovens);
 
   const resultsDiv = document.getElementById('optimizerResults');
   const summaryDiv = document.getElementById('optimizerSummary');
 
   if (summaryDiv) {
+    const realTimeLine = result.scheduleWarning
+      ? `⚠️ ${result.scheduleWarning}`
+      : `⏳ Est. real time: <strong>${formatTime(result.estimatedRealTime)}</strong>`;
+
     summaryDiv.innerHTML = `
       <div class="summary-box">
         <div class="summary-line">📦 Strategy: <strong>${strategy.toUpperCase()}</strong></div>
         <div class="summary-line">🎯 Target: <strong>${treats.toLocaleString()}</strong> treats</div>
         <div class="summary-line">✅ Total: <strong>${result.totalTreats.toLocaleString()}</strong> treats</div>
         <div class="summary-line">💰 Cost: <strong>${result.totalCost.toLocaleString()}</strong></div>
-        <div class="summary-line">⏱️ Time: <strong>${formatTime(result.totalTime)}</strong></div>
+        <div class="summary-line">⏱️ Oven-time (serial): <strong>${formatTime(result.totalTime)}</strong></div>
+        <div class="summary-line">${realTimeLine}</div>
         <div class="summary-line">📋 Recipe: <strong>${result.recipe.length}</strong> food type(s)</div>
       </div>
     `;
