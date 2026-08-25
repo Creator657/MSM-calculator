@@ -11,9 +11,8 @@
 <div class="calculator" role="application" aria-labelledby="appTitle">
     <div class="header">
         <div class="brand-dot" aria-hidden="true"></div>
-        <h2 id="appTitle">MSM Treat Calculator</h2>
+        <h2 id="appTitle">MSM Treat Calc</h2>
 
-        <!-- Visible theme dropdown -->
         <div class="theme-select" style="margin-left:auto;">
             <span id="themeLabel" class="small" style="display:block;">Theme</span>
             <div class="custom-select" id="themeDropdown">
@@ -32,24 +31,22 @@
         <h3>Level Calculator</h3>
         
         <div class="input-group">
-            <label for="foodX">Food per Click</label>
+            <label for="foodX">Food per Click (X)</label>
             <input type="number" id="foodX" value="22" min="0" aria-describedby="foodXHelp">
             <div class="small" id="foodXHelp">Amount of food gained per single click.</div>
         </div>
 
-        <!-- Current level slider (1-19) -->
         <div class="input-group">
-    <label for="clicksFed">Clicks Fed Already on Current Level</label>
-    <div class="range-container">
-        <input type="range" id="clicksFed" min="0" max="3" value="0" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0">
-        <span id="clicksValue">0</span>
-    </div>
-    <div class="small">It always takes exactly 4 clicks to level up — this is how many of those 4 you've already fed.</div>
-</div>
+            <label for="currentLevel">Current Level (1–19)</label>
+            <div class="range-container">
+                <input type="range" id="currentLevel" min="1" max="19" value="1" aria-valuemin="1" aria-valuemax="19" aria-valuenow="1">
+                <span id="currentValue">1</span>
+            </div>
+            <div class="small">The level the pet is currently at.</div>
+        </div>
 
-        <!-- Target level slider (2-20) -->
         <div class="input-group">
-            <label for="targetLevel">Target Level</label>
+            <label for="targetLevel">Target Level (2–20)</label>
             <div class="range-container">
                 <input type="range" id="targetLevel" min="2" max="20" value="2" aria-valuemin="2" aria-valuemax="20" aria-valuenow="2">
                 <span id="targetValue">2</span>
@@ -58,11 +55,12 @@
         </div>
 
         <div class="input-group">
-            <label for="clicksFed">Clicks Fed Already on Current Level</label>
+            <label for="clicksFed">Clicks Fed Already on Current Level (0–3)</label>
             <div class="range-container">
                 <input type="range" id="clicksFed" min="0" max="3" value="0" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0">
                 <span id="clicksValue">0</span>
             </div>
+            <div class="small">It always takes exactly 4 clicks to level up — this is how many of those 4 you've already fed.</div>
         </div>
 
         <button id="calculateBtn">Calculate Total</button>
@@ -93,9 +91,27 @@
             </select>
         </div>
 
+        <div class="input-group">
+            <label>Your Ovens</label>
+            <div class="oven-inputs">
+                <div class="oven-field">
+                    <label for="ovenSmall" class="oven-label">Small</label>
+                    <input type="number" id="ovenSmall" min="0" value="1">
+                </div>
+                <div class="oven-field">
+                    <label for="ovenMedium" class="oven-label">Medium</label>
+                    <input type="number" id="ovenMedium" min="0" value="0">
+                </div>
+                <div class="oven-field">
+                    <label for="ovenLarge" class="oven-label">Large</label>
+                    <input type="number" id="ovenLarge" min="0" value="0">
+                </div>
+            </div>
+            <div class="small">A bigger oven can also bake smaller recipes. More ovens = more parallel baking = faster real time.</div>
+        </div>
+
         <button id="optimizeBtn">Generate Recipe</button>
 
-        <!-- Optimizer Results -->
         <div id="optimizerResults" style="display:none;">
             <div class="optimizer-summary" id="optimizerSummary"></div>
             
