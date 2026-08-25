@@ -360,3 +360,24 @@ button:active{ transform: translateY(0); opacity:0.95; }
 .admin-log-entry.log-error{ color:#ff8a8a; }
 .admin-log-entry.log-warn{ color:#ffd27a; }
 .admin-log-entry.log-info{ color:#9fd8ff; }
+
+
+/* Oven count inputs (Food Optimizer) */
+.oven-inputs{
+  display:flex;
+  gap:10px;
+}
+.oven-field{
+  flex:1;
+}
+.oven-field .oven-label{
+  font-size:11px;
+  margin-bottom:4px;
+  opacity:0.7;
+  font-weight:600;
+}
+.oven-field input[type="number"]{
+  padding:8px 10px;
+  font-size:14px;
+  text-align:center;
+}
