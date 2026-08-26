@@ -1,0 +1,243 @@
+[
+  {
+    "event": "Crescendo Moon",
+    "name": "New Year Cake",
+    "cost": 150000,
+    "timeSeconds": 14400,
+    "treatsMade": 20000,
+    "minOvenSize": "medium"
+  },
+  {
+    "event": "Crescendo Moon",
+    "name": "Dumplings",
+    "cost": 3000000,
+    "timeSeconds": 43200,
+    "treatsMade": 400000,
+    "minOvenSize": "large"
+  },
+  {
+    "event": "Season of Love",
+    "name": "Box of Chokkolits",
+    "cost": 150000,
+    "timeSeconds": 14400,
+    "treatsMade": 20000,
+    "minOvenSize": "medium"
+  },
+  {
+    "event": "Season of Love",
+    "name": "Spaghetti Dinner",
+    "cost": 10000000,
+    "timeSeconds": 158400,
+    "treatsMade": 1000000,
+    "minOvenSize": "large"
+  },
+  {
+    "event": "Cloverspell",
+    "name": "Dyed Pancakes",
+    "cost": 150000,
+    "timeSeconds": 14400,
+    "treatsMade": 20000,
+    "minOvenSize": "medium"
+  },
+  {
+    "event": "Cloverspell",
+    "name": "Clover Shake",
+    "cost": 13330000,
+    "timeSeconds": 478800,
+    "treatsMade": 3330000,
+    "minOvenSize": "large"
+  },
+  {
+    "event": "Eggs-Travaganza",
+    "name": "Candied Carrot",
+    "cost": 150000,
+    "timeSeconds": 14400,
+    "treatsMade": 20000,
+    "minOvenSize": "medium"
+  },
+  {
+    "event": "Eggs-Travaganza",
+    "name": "Golden Eggs",
+    "cost": 2250000,
+    "timeSeconds": 39600,
+    "treatsMade": 400000,
+    "minOvenSize": "large"
+  },
+  {
+    "event": "Echoes of Eco",
+    "name": "Herbal Tea",
+    "cost": 150000,
+    "timeSeconds": 14400,
+    "treatsMade": 20000,
+    "minOvenSize": "medium"
+  },
+  {
+    "event": "Echoes of Eco",
+    "name": "Fruit Skewers",
+    "cost": 11111111,
+    "timeSeconds": 158400,
+    "treatsMade": 1111111,
+    "minOvenSize": "large"
+  },
+  {
+    "event": "Perplexplore",
+    "name": "Jawbreakers",
+    "cost": 150000,
+    "timeSeconds": 14400,
+    "treatsMade": 20000,
+    "minOvenSize": "medium"
+  },
+  {
+    "event": "Perplexplore",
+    "name": "Instant Noodles",
+    "cost": 12500000,
+    "timeSeconds": 162000,
+    "treatsMade": 1000000,
+    "minOvenSize": "large"
+  },
+  {
+    "event": "Life-Formula",
+    "name": "Dynamic Fluid",
+    "cost": 150000,
+    "timeSeconds": 14400,
+    "treatsMade": 20000,
+    "minOvenSize": "medium"
+  },
+  {
+    "event": "Life-Formula",
+    "name": "Licorice DNA",
+    "cost": 10000000,
+    "timeSeconds": 176400,
+    "treatsMade": 1000000,
+    "minOvenSize": "large"
+  },
+  {
+    "event": "SkyPainting",
+    "name": "Cotton Candy",
+    "cost": 150000,
+    "timeSeconds": 14400,
+    "treatsMade": 20000,
+    "minOvenSize": "medium"
+  },
+  {
+    "event": "SkyPainting",
+    "name": "RAINB-O",
+    "cost": 3000000,
+    "timeSeconds": 43200,
+    "treatsMade": 400000,
+    "minOvenSize": "large"
+  },
+  {
+    "event": "SummerSong",
+    "name": "Melon Pop",
+    "cost": 150000,
+    "timeSeconds": 14400,
+    "treatsMade": 20000,
+    "minOvenSize": "medium"
+  },
+  {
+    "event": "SummerSong",
+    "name": "Bark Burger",
+    "cost": 14000000,
+    "timeSeconds": 504000,
+    "treatsMade": 4000000,
+    "minOvenSize": "large"
+  },
+  {
+    "event": "MindBoggle",
+    "name": "Literal Sandwich",
+    "cost": 150000,
+    "timeSeconds": 14400,
+    "treatsMade": 20000,
+    "minOvenSize": "medium"
+  },
+  {
+    "event": "MindBoggle",
+    "name": "Bento Puzzle Box",
+    "cost": 12000000,
+    "timeSeconds": 176400,
+    "treatsMade": 1200000,
+    "minOvenSize": "large"
+  },
+  {
+    "event": "Spooktacle",
+    "name": "Wormy Brownie",
+    "cost": 150000,
+    "timeSeconds": 14400,
+    "treatsMade": 20000,
+    "minOvenSize": "medium"
+  },
+  {
+    "event": "Spooktacle",
+    "name": "Witch Fingers",
+    "cost": 11000000,
+    "timeSeconds": 162000,
+    "treatsMade": 1000000,
+    "minOvenSize": "large"
+  },
+  {
+    "event": "Beat Hereafter",
+    "name": "Pan de muerto",
+    "cost": 150000,
+    "timeSeconds": 14400,
+    "treatsMade": 20000,
+    "minOvenSize": "medium"
+  },
+  {
+    "event": "Beat Hereafter",
+    "name": "Tamale",
+    "cost": 10000000,
+    "timeSeconds": 176400,
+    "treatsMade": 1000000,
+    "minOvenSize": "large"
+  },
+  {
+    "event": "Feast-Ember",
+    "name": "Corn on the Cob",
+    "cost": 150000,
+    "timeSeconds": 14400,
+    "treatsMade": 20000,
+    "minOvenSize": "medium"
+  },
+  {
+    "event": "Feast-Ember",
+    "name": "Casserole",
+    "cost": 13000000,
+    "timeSeconds": 468000,
+    "treatsMade": 3000000,
+    "minOvenSize": "large"
+  },
+  {
+    "event": "Festival of Yay",
+    "name": "Gingerbread Mon",
+    "cost": 150000,
+    "timeSeconds": 14400,
+    "treatsMade": 20000,
+    "minOvenSize": "medium"
+  },
+  {
+    "event": "Festival of Yay",
+    "name": "Figgy Pudding",
+    "cost": 10000000,
+    "timeSeconds": 151200,
+    "treatsMade": 1300000,
+    "minOvenSize": "large"
+  },
+  {
+    "event": "Anniversary Month",
+    "name": "Café Blue Coffee",
+    "cost": 150000,
+    "timeSeconds": 14400,
+    "treatsMade": 20000,
+    "minOvenSize": "medium"
+  },
+  {
+    "event": "Anniversary Month",
+    "name": "Bubble Pastry",
+    "cost": null,
+    "timeSeconds": null,
+    "treatsMade": null,
+    "minOvenSize": "large",
+    "randomized": true
+  }
+]

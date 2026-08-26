@@ -1,0 +1,107 @@
+[
+  {
+    "name": "Season of Love",
+    "type": "core",
+    "startWeekdayPattern": "1st Wednesday of February",
+    "endWeekdayPattern": "4th Monday of February",
+    "duration": "~19 Days"
+  },
+  {
+    "name": "Cloverspell",
+    "type": "auxiliary",
+    "startWeekdayPattern": "1st Wednesday of March",
+    "endWeekdayPattern": "3rd Monday of March",
+    "duration": "12 Days"
+  },
+  {
+    "name": "Eggs-Travaganza",
+    "type": "core",
+    "startWeekdayPattern": "1st Wednesday of April",
+    "endWeekdayPattern": "3rd Monday of April",
+    "duration": "~19 Days"
+  },
+  {
+    "name": "Echoes of Eco",
+    "type": "auxiliary",
+    "startWeekdayPattern": "3rd Wednesday of April",
+    "endWeekdayPattern": "5th Monday of April (or 1st Monday of May)",
+    "duration": "12 Days"
+  },
+  {
+    "name": "Perplexplore",
+    "type": "auxiliary",
+    "startWeekdayPattern": "2nd Wednesday of May",
+    "endWeekdayPattern": "4th Monday of May",
+    "duration": "12 Days"
+  },
+  {
+    "name": "Life-Formula",
+    "type": "auxiliary",
+    "startWeekdayPattern": "1st Wednesday of June",
+    "endWeekdayPattern": "3rd Monday of June",
+    "duration": "12 Days"
+  },
+  {
+    "name": "SkyPainting",
+    "type": "auxiliary",
+    "startWeekdayPattern": "3rd Wednesday of June",
+    "endWeekdayPattern": "5th Monday of June (or 1st Monday of July)",
+    "duration": "12 Days"
+  },
+  {
+    "name": "SummerSong",
+    "type": "core",
+    "startWeekdayPattern": "2nd Wednesday of July",
+    "endWeekdayPattern": "1st Monday of August",
+    "duration": "~26 Days"
+  },
+  {
+    "name": "MindBoggle",
+    "type": "auxiliary",
+    "startWeekdayPattern": "2nd Wednesday of August",
+    "endWeekdayPattern": "4th Monday of August",
+    "duration": "12 Days"
+  },
+  {
+    "name": "Anniversary Month",
+    "type": "anniversary",
+    "startWeekdayPattern": "1st Wednesday of September",
+    "endWeekdayPattern": "1st Monday of October",
+    "duration": "33 Days"
+  },
+  {
+    "name": "Spooktacle",
+    "type": "core",
+    "startWeekdayPattern": "3rd Wednesday of October",
+    "endWeekdayPattern": "1st Monday of November",
+    "duration": "~19 Days"
+  },
+  {
+    "name": "Beat Hereafter",
+    "type": "auxiliary",
+    "startWeekdayPattern": "5th Wednesday of October (or last Wed)",
+    "endWeekdayPattern": "2nd Monday of November",
+    "duration": "12 Days"
+  },
+  {
+    "name": "Feast-Ember",
+    "type": "auxiliary",
+    "startWeekdayPattern": "3rd Wednesday of November",
+    "endWeekdayPattern": "1st Monday of December",
+    "duration": "12 Days"
+  },
+  {
+    "name": "Festival of Yay",
+    "type": "core",
+    "startWeekdayPattern": "2nd Wednesday of December",
+    "endWeekdayPattern": "1st Monday of January",
+    "duration": "~26 Days"
+  },
+  {
+    "name": "Crescendo Moon",
+    "type": "auxiliary",
+    "startWeekdayPattern": "Wednesday of the week before Lunar New Year",
+    "endWeekdayPattern": "2nd Monday after start",
+    "duration": "12 Days"
+  }
+]
